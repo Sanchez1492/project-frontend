@@ -1,3 +1,6 @@
+const container = document.querySelector('.cards-container');
+const API = 'https://api.escuelajs.co/api/v1/products';
+
 const menuEmail = document.querySelector('.navbar-email');
 const desktopMenu = document.querySelector('.desktop-menu');
 const burgerIcon = document.querySelector('.menu');
@@ -50,65 +53,65 @@ function closeAsideProductDetail() {
     productDetailContainer.classList.add('inactive')
 }
 
+const productList = [];
 
-let productList = [];
+async function getProds() {
+    const response = await fetch(API)
+    const data = await response.json()
+    const dataArray = Object.values(data)
 
-productList.push({
-    name: 'Bike',
-    price: 300,
-    image: 'https://images.pexels.com/photos/276517/pexels-photo-276517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
-});
-
-productList.push({
-    name: 'Led Computer Screen',
-    price: 600,
-    image: 'https://www.fullh4rd.com.ar/img/productos/Pics_Prod/monitor-24-lg-24mp400b-led-fhd-hdmi-vga-0.jpg',
-});
-
-productList.push({
-    name: 'Gaming PC',
-    price: 1300,
-    image: 'https://bangho.vtexassets.com/arquivos/ids/161038/Pc-Gamer-GM-CARBIDE-i5-Nvidia-GTX-1660ti.jpg',
-});
-
-
-function renderProducts(arr) {
-    for (product of arr) {
-        const productCard = document.createElement('div');
-        productCard.classList.add('product-card');
-    
-        const productImg = document.createElement('img');
-        productImg.setAttribute('src', product.image);
-        productImg.addEventListener('click', openAsideProductDetail)
-    
-        const productInfo = document.createElement('div');
-        productInfo.classList.add('product-info');
-    
-        const productInfoDiv = document.createElement('div');
-    
-        const productPrice = document.createElement('p');
-        productPrice.innerText = '$' + product.price;
-        
-        const productName = document.createElement('p');
-        productName.innerText = product.name;
-    
-        productInfoDiv.appendChild(productPrice)
-        productInfoDiv.appendChild(productName);
-    
-        const productInfoFigure = document.createElement('figure');
-        const productImgCart = document.createElement('img');
-        productImgCart.setAttribute('src', './icons/bt_add_to_cart.svg');
-    
-        productInfoFigure.appendChild(productImgCart);
-    
-        productInfo.appendChild(productInfoDiv);
-        productInfo.appendChild(productInfoFigure);
-    
-        productCard.appendChild(productImg);
-        productCard.appendChild(productInfo);
-    
-        cardContainer.appendChild(productCard);
+    for (let index = 0; index < 50; index++) {
+        const element = dataArray[index];
+        productList.push({
+            name: element.title,
+            price: element.price,
+            image: element.category.image,
+        })
     }
+
+    function renderProducts(arr) {
+        for (product of arr) {
+            const productCard = document.createElement('div');
+            productCard.classList.add('product-card');
+        
+            const productImg = document.createElement('img');
+            productImg.setAttribute('src', product.image);
+            productImg.addEventListener('click', openAsideProductDetail)
+        
+            const productInfo = document.createElement('div');
+            productInfo.classList.add('product-info');
+        
+            const productInfoDiv = document.createElement('div');
+        
+            const productPrice = document.createElement('p');
+            productPrice.innerText = '$' + product.price;
+            
+            const productName = document.createElement('p');
+            productName.innerText = product.name;
+        
+            productInfoDiv.appendChild(productPrice)
+            productInfoDiv.appendChild(productName);
+        
+            const productInfoFigure = document.createElement('figure');
+            const productImgCart = document.createElement('img');
+            productImgCart.setAttribute('src', './icons/bt_add_to_cart.svg');
+        
+            productInfoFigure.appendChild(productImgCart);
+        
+            productInfo.appendChild(productInfoDiv);
+            productInfo.appendChild(productInfoFigure);
+        
+            productCard.appendChild(productImg);
+            productCard.appendChild(productInfo);
+        
+            cardContainer.appendChild(productCard);
+        }
+    }
+    
+    renderProducts(productList)
 }
 
-renderProducts(productList);
+getProds()
+
+
+
